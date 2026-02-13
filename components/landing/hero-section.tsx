@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { ArrowDown } from "lucide-react";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -88,16 +89,16 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              <a
-                href="#welcome"
-                className="group relative px-8 py-4 bg-yellow-400 text-black font-bold text-lg overflow-hidden transition-all hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-black"
+              <Link
+                href="/gallery"
+                className="px-8 py-4 bg-yellow-400 text-black font-bold text-lg transition-all hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-black text-center"
               >
-                <span className="relative z-10">Discover More</span>
-              </a>
+                View Gallery
+              </Link>
 
               <a
                 href="#service-times"
-                className="px-8 py-4 border-2 border-white text-white font-bold text-lg transition-all hover:bg-white hover:text-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
+                className="px-8 py-4 border-2 border-white text-white font-bold text-lg transition-all hover:bg-white hover:text-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black text-center"
               >
                 Service Times
               </a>

@@ -3,21 +3,7 @@
 import { motion } from "motion/react";
 import { useInView } from "motion/react";
 import { useRef } from "react";
-
-const serviceTimes = [
-  {
-    day: "Sunday",
-    times: [
-      { time: "8:00 AM", type: "First Service" },
-      { time: "10:30 AM", type: "Main Service" },
-      { time: "6:00 PM", type: "Evening Service" },
-    ],
-  },
-  {
-    day: "Wednesday",
-    times: [{ time: "7:00 PM", type: "Midweek Service" }],
-  },
-];
+import { churchInfo } from "@christlife/lib/church-info";
 
 export function ServiceTimesSection() {
   const ref = useRef(null);
@@ -44,18 +30,22 @@ export function ServiceTimesSection() {
           </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-0">
-          {serviceTimes.map((service, index) => (
+        <div className="grid md:grid-cols-3 gap-0">
+          {churchInfo.services.weekly.map((service, index) => (
             <motion.div
               key={service.day}
-              className={`relative p-12 border-2 border-white ${
-                index === 0 ? "md:border-r-0" : ""
+              className={`relative p-10 border-2 border-white ${
+                index === 0
+                  ? "md:border-r-0"
+                  : index === 1
+                    ? "md:border-r-0"
+                    : ""
               }`}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{
                 duration: 0.8,
-                delay: index * 0.2 + 0.2,
+                delay: index * 0.15 + 0.2,
                 ease: "easeOut",
               }}
             >
@@ -63,15 +53,16 @@ export function ServiceTimesSection() {
                 {service.day}
               </div>
 
-              <div className="space-y-6">
-                {service.times.map((timeSlot, timeIndex) => (
-                  <div key={timeIndex} className="group">
-                    <div className="text-4xl font-black mb-2 group-hover:text-yellow-400 transition-colors">
-                      {timeSlot.time}
-                    </div>
-                    <div className="text-lg text-gray-400">{timeSlot.type}</div>
-                  </div>
-                ))}
+              <div className="text-3xl font-black mb-2 group-hover:text-yellow-400 transition-colors">
+                {service.time}
+              </div>
+
+              <div className="text-lg font-bold text-white mb-2">
+                {service.name}
+              </div>
+
+              <div className="text-sm text-gray-400 leading-relaxed">
+                {service.description}
               </div>
             </motion.div>
           ))}

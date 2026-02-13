@@ -3,38 +3,53 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, RotateCw } from "lucide-react";
 import { galleryImages } from "@christlife/lib/gallery-data";
 
 interface ImageLightboxProps {
   imageId: string;
+  rotations: Record<string, number>;
+  onRotate: (id: string, rotation: number) => void;
   onClose: () => void;
 }
 
-export function ImageLightbox({ imageId, onClose }: ImageLightboxProps) {
+export function ImageLightbox({
+  imageId,
+  rotations,
+  onRotate,
+  onClose,
+}: ImageLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(
     galleryImages.findIndex((img) => img.id === imageId),
   );
   const [direction, setDirection] = useState(0);
-
   const currentImage = galleryImages[currentIndex];
+  const rotation = rotations[currentImage.id] || 0;
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === galleryImages.length - 1;
 
   // Navigation functions
-  const goToPrevious = useCallback(() => {
-    if (!isFirst) {
-      setDirection(-1);
-      setCurrentIndex((prev) => prev - 1);
-    }
-  }, [isFirst]);
+  const goToPrevious = useCallback(
+    (e?: React.MouseEvent) => {
+      if (e) e.stopPropagation();
+      if (!isFirst) {
+        setDirection(-1);
+        setCurrentIndex((prev) => prev - 1);
+      }
+    },
+    [isFirst],
+  );
 
-  const goToNext = useCallback(() => {
-    if (!isLast) {
-      setDirection(1);
-      setCurrentIndex((prev) => prev + 1);
-    }
-  }, [isLast]);
+  const goToNext = useCallback(
+    (e?: React.MouseEvent) => {
+      if (e) e.stopPropagation();
+      if (!isLast) {
+        setDirection(1);
+        setCurrentIndex((prev) => prev + 1);
+      }
+    },
+    [isLast],
+  );
 
   const goToImage = useCallback(
     (index: number) => {
@@ -42,6 +57,15 @@ export function ImageLightbox({ imageId, onClose }: ImageLightboxProps) {
       setCurrentIndex(index);
     },
     [currentIndex],
+  );
+
+  const handleRotate = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const currentRotation = rotations[currentImage.id] || 0;
+      onRotate(currentImage.id, (currentRotation + 90) % 360);
+    },
+    [currentImage.id, onRotate, rotations],
   );
 
   // Keyboard navigation
@@ -108,13 +132,26 @@ export function ImageLightbox({ imageId, onClose }: ImageLightboxProps) {
         <div className="text-sm font-medium text-white">
           {currentIndex + 1} / {galleryImages.length}
         </div>
-        <button
-          onClick={onClose}
-          className="rounded-sm p-2 text-white transition-colors hover:bg-white/10 hover:text-yellow-400"
-          aria-label="Close gallery"
-        >
-          <X className="h-6 w-6" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRotate}
+            className="flex items-center gap-2 rounded-sm px-3 py-2 text-white transition-colors hover:bg-white/10 hover:text-yellow-400"
+            aria-label="Rotate image"
+            title="Rotate 90° clockwise"
+          >
+            <RotateCw className="h-5 w-5" />
+            <span className="hidden text-xs font-bold uppercase sm:inline">
+              Rotate
+            </span>
+          </button>
+          <button
+            onClick={onClose}
+            className="rounded-sm p-2 text-white transition-colors hover:bg-white/10 hover:text-yellow-400"
+            aria-label="Close gallery"
+          >
+            <X className="h-6 w-6" />
+          </button>
+        </div>
       </div>
 
       {/* Main Image Area */}
@@ -140,7 +177,10 @@ export function ImageLightbox({ imageId, onClose }: ImageLightboxProps) {
             onDragEnd={handleDragEnd}
             className="absolute inset-0 flex items-center justify-center p-4"
           >
-            <div className="relative h-full w-full">
+            <div
+              className="relative h-full w-full transition-transform duration-300 ease-in-out"
+              style={{ transform: `rotate(${rotation}deg)` }}
+            >
               <Image
                 src={currentImage.src}
                 alt={currentImage.alt}
@@ -158,7 +198,7 @@ export function ImageLightbox({ imageId, onClose }: ImageLightboxProps) {
         <button
           onClick={goToPrevious}
           disabled={isFirst}
-          className="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-sm border-2 border-white bg-black/50 p-3 text-white backdrop-blur-sm transition-all hover:border-yellow-400 hover:text-yellow-400 disabled:opacity-30 md:block"
+          className="absolute left-4 top-1/2 z-10 hidden -translate-y-1/2 rounded-sm border-2 border-white bg-black/50 p-3 text-white backdrop-blur-sm transition-all hover:border-yellow-400 hover:text-yellow-400 disabled:opacity-30 md:block"
           aria-label="Previous image"
         >
           <ChevronLeft className="h-6 w-6" />
@@ -166,7 +206,7 @@ export function ImageLightbox({ imageId, onClose }: ImageLightboxProps) {
         <button
           onClick={goToNext}
           disabled={isLast}
-          className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-sm border-2 border-white bg-black/50 p-3 text-white backdrop-blur-sm transition-all hover:border-yellow-400 hover:text-yellow-400 disabled:opacity-30 md:block"
+          className="absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 rounded-sm border-2 border-white bg-black/50 p-3 text-white backdrop-blur-sm transition-all hover:border-yellow-400 hover:text-yellow-400 disabled:opacity-30 md:block"
           aria-label="Next image"
         >
           <ChevronRight className="h-6 w-6" />

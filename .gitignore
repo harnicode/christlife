@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Google Drive API credentials (NEVER COMMIT)
+google-credentials.json

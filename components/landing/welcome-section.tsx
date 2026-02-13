@@ -64,9 +64,9 @@ export function WelcomeSection() {
               </p>
 
               <p className="text-lg text-gray-600 leading-relaxed">
-                Our community is richly diverse, with people of different ages
-                and backgrounds coming together to worship and serve together.
-                We welcome all individuals seeking God&apos;s love and our doors
+                Our church is richly diverse, with people of different ages and
+                backgrounds coming together to worship and serve together. We
+                welcome all individuals seeking God&apos;s love and our doors
                 are open to every soul seeking to welcome Jesus into their
                 heart.
               </p>

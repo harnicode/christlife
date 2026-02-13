@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import { ChurchSchema } from "@christlife/components/structured-data/church-schema";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -27,6 +28,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
+      <head>
+        <ChurchSchema />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

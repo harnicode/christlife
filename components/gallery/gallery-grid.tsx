@@ -59,7 +59,10 @@ export function GalleryGrid() {
                   alt={image.alt}
                   width={800}
                   height={600}
-                  className="w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full object-cover transition-all duration-500 group-hover:scale-110"
+                  style={{
+                    transform: `rotate(${imageRotations[image.id] || 0}deg)`,
+                  }}
                   loading={index < 6 ? "eager" : "lazy"}
                 />
 

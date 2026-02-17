@@ -24,7 +24,6 @@ export function ImageLightbox({
   );
   const [direction, setDirection] = useState(0);
   const currentImage = galleryImages[currentIndex];
-  const rotation = rotations[currentImage.id] || 0;
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === galleryImages.length - 1;
 
@@ -178,8 +177,10 @@ export function ImageLightbox({
             className="absolute inset-0 flex items-center justify-center p-4"
           >
             <div
-              className="relative h-full w-full transition-transform duration-300 ease-in-out"
-              style={{ transform: `rotate(${rotation}deg)` }}
+              className="relative h-full w-full transition-all duration-300 ease-in-out"
+              style={{
+                transform: `rotate(${rotations[currentImage.id] || 0}deg)`,
+              }}
             >
               <Image
                 src={currentImage.src}
@@ -248,7 +249,8 @@ export function ImageLightbox({
                 src={image.src}
                 alt={image.title}
                 fill
-                className="object-cover"
+                className="object-cover transition-all duration-300"
+                style={{ transform: `rotate(${rotations[image.id] || 0}deg)` }}
                 sizes="64px"
               />
             </button>

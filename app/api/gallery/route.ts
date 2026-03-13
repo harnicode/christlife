@@ -6,12 +6,15 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1", 10);
-    const limit = parseInt(searchParams.get("limit") || "12", 10);
-    
-    // Fallback if script hasn't run
-    const imageBlobs = data as GalleryImage[] || [];
+    const limit = parseInt(searchParams.get("limit") || "24", 10);
 
-    imageBlobs.sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
+    // Fallback if script hasn't run
+    const imageBlobs = (data as GalleryImage[]) || [];
+
+    imageBlobs.sort(
+      (a, b) =>
+        new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime(),
+    );
 
     const totalItems = imageBlobs.length;
     const totalPages = Math.ceil(totalItems / limit);
@@ -26,14 +29,14 @@ export async function GET(request: Request) {
       };
     });
 
-    return NextResponse.json({ 
-      images, 
+    return NextResponse.json({
+      images,
       pagination: {
         totalItems,
         totalPages,
         currentPage: page,
-        limit
-      } 
+        limit,
+      },
     });
   } catch (error) {
     console.error("Gallery API Error:", error);

@@ -4,9 +4,10 @@ import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight, RotateCw } from "lucide-react";
-import { galleryImages } from "@christlife/lib/gallery-data";
+import type { GalleryImage } from "@christlife/lib/gallery-data";
 
 interface ImageLightboxProps {
+  images: GalleryImage[];
   imageId: string;
   rotations: Record<string, number>;
   onRotate: (id: string, rotation: number) => void;
@@ -14,18 +15,19 @@ interface ImageLightboxProps {
 }
 
 export function ImageLightbox({
+  images,
   imageId,
   rotations,
   onRotate,
   onClose,
 }: ImageLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(
-    galleryImages.findIndex((img) => img.id === imageId),
+    images.findIndex((img) => img.id === imageId),
   );
   const [direction, setDirection] = useState(0);
-  const currentImage = galleryImages[currentIndex];
+  const currentImage = images[currentIndex];
   const isFirst = currentIndex === 0;
-  const isLast = currentIndex === galleryImages.length - 1;
+  const isLast = currentIndex === images.length - 1;
 
   // Navigation functions
   const goToPrevious = useCallback(
@@ -129,7 +131,7 @@ export function ImageLightbox({
       {/* Header */}
       <div className="flex items-center justify-between border-b border-white/10 p-4">
         <div className="text-sm font-medium text-white">
-          {currentIndex + 1} / {galleryImages.length}
+          {currentIndex + 1} / {images.length}
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -190,6 +192,7 @@ export function ImageLightbox({
                 sizes="100vw"
                 priority
                 quality={95}
+                unoptimized
               />
             </div>
           </motion.div>
@@ -232,7 +235,7 @@ export function ImageLightbox({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex gap-2 overflow-x-auto pb-2">
-          {galleryImages.map((image, index) => (
+          {images.map((image, index) => (
             <button
               key={image.id}
               onClick={(e) => {
@@ -252,6 +255,7 @@ export function ImageLightbox({
                 className="object-cover transition-all duration-300"
                 style={{ transform: `rotate(${rotations[image.id] || 0}deg)` }}
                 sizes="64px"
+                unoptimized
               />
             </button>
           ))}

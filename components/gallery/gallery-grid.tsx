@@ -3,10 +3,23 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { galleryImages } from "@christlife/lib/gallery-data";
+import type { GalleryImage } from "@christlife/lib/gallery-data";
 import { ImageLightbox } from "./image-lightbox";
 
-export function GalleryGrid() {
+export interface PaginationData {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+}
+
+export function GalleryGrid({
+  images,
+  pagination,
+}: {
+  images: GalleryImage[];
+  pagination?: PaginationData | null;
+}) {
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [imageRotations, setImageRotations] = useState<Record<string, number>>(
     {},
@@ -46,7 +59,7 @@ export function GalleryGrid() {
           animate="visible"
           className="columns-2 gap-3 md:columns-3 md:gap-4 lg:columns-4"
         >
-          {galleryImages.map((image, index) => (
+          {images.map((image, index) => (
             <motion.div
               key={image.id}
               variants={itemVariants}
@@ -64,6 +77,7 @@ export function GalleryGrid() {
                     transform: `rotate(${imageRotations[image.id] || 0}deg)`,
                   }}
                   loading={index < 6 ? "eager" : "lazy"}
+                  unoptimized
                 />
 
                 {/* Overlay */}
@@ -83,11 +97,56 @@ export function GalleryGrid() {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Pagination Controls */}
+        {pagination && pagination.totalPages > 1 && (
+          <div className="mt-12 flex items-center justify-center gap-2">
+            {pagination.currentPage > 1 ? (
+              <a
+                href={`/gallery?page=${pagination.currentPage - 1}`}
+                className="rounded-md border border-white/20 bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:border-yellow-400 hover:text-yellow-400 md:text-base"
+              >
+                Previous
+              </a>
+            ) : (
+              <span className="cursor-not-allowed rounded-md border border-white/10 bg-black px-4 py-2 text-sm font-medium text-white/50 md:text-base">
+                Previous
+              </span>
+            )}
+
+            <div className="mx-2 flex items-center gap-1">
+              <span className="text-sm text-white/80 md:text-base">
+                Page{" "}
+                <span className="font-bold text-white">
+                  {pagination.currentPage}
+                </span>{" "}
+                of{" "}
+                <span className="font-bold text-white">
+                  {pagination.totalPages}
+                </span>
+              </span>
+            </div>
+
+            {pagination.currentPage < pagination.totalPages ? (
+              <a
+                href={`/gallery?page=${pagination.currentPage + 1}`}
+                className="rounded-md border border-white/20 bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:border-yellow-400 hover:text-yellow-400 md:text-base"
+              >
+                Next
+              </a>
+            ) : (
+              <span className="cursor-not-allowed rounded-md border border-white/10 bg-black px-4 py-2 text-sm font-medium text-white/50 md:text-base">
+                Next
+              </span>
+            )}
+          </div>
+        )}
       </section>
 
       {/* Lightbox Modal */}
       {selectedImageId && (
         <ImageLightbox
+          images={images}
           imageId={selectedImageId}
           rotations={imageRotations}
           onRotate={updateRotation}

@@ -24,12 +24,14 @@ export default async function GalleryPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const token = process.env.BLOB_READ_WRITE_TOKEN;
-  
+
   if (!token) {
     return (
       <main className="min-h-screen bg-black">
         <GalleryHeader />
-        <div className="flex h-64 items-center justify-center text-white text-sm">Missing Blob Token</div>
+        <div className="flex h-64 items-center justify-center text-white text-sm">
+          Missing Blob Token
+        </div>
       </main>
     );
   }
@@ -38,10 +40,12 @@ export default async function GalleryPage({
   const page = Array.isArray(pageParam) ? pageParam[0] : pageParam;
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-  const response = await fetch(`${apiUrl}/api/gallery?page=${page}&limit=12`, { cache: "no-store" });
+  const response = await fetch(`${apiUrl}/api/gallery?page=${page}&limit=24`, {
+    cache: "no-store",
+  });
   let images: GalleryImage[] = [];
   let pagination = null;
-  
+
   if (response.ok) {
     const data = await response.json();
     images = data.images || [];

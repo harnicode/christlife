@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import type { GalleryImage } from "@christlife/lib/gallery-data";
 import { ImageLightbox } from "./image-lightbox";
 
@@ -103,12 +102,12 @@ export function GalleryGrid({
         {pagination && pagination.totalPages > 1 && (
           <div className="mt-12 flex items-center justify-center gap-2">
             {pagination.currentPage > 1 ? (
-              <Link
+              <a
                 href={`/gallery?page=${pagination.currentPage - 1}`}
                 className="rounded-md border border-white/20 bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:border-yellow-400 hover:text-yellow-400 md:text-base"
               >
                 Previous
-              </Link>
+              </a>
             ) : (
               <span className="cursor-not-allowed rounded-md border border-white/10 bg-black px-4 py-2 text-sm font-medium text-white/50 md:text-base">
                 Previous
@@ -129,12 +128,12 @@ export function GalleryGrid({
             </div>
 
             {pagination.currentPage < pagination.totalPages ? (
-              <Link
+              <a
                 href={`/gallery?page=${pagination.currentPage + 1}`}
                 className="rounded-md border border-white/20 bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:border-yellow-400 hover:text-yellow-400 md:text-base"
               >
                 Next
-              </Link>
+              </a>
             ) : (
               <span className="cursor-not-allowed rounded-md border border-white/10 bg-black px-4 py-2 text-sm font-medium text-white/50 md:text-base">
                 Next

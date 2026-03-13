@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/sync-gallery-data.js",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "next lint",
     "sync:gallery": "node scripts/sync-gallery-images.js",
     "update:gallery-data": "node scripts/update-gallery-data.js",
     "gallery:refresh": "yarn sync:gallery && yarn update:gallery-data"
